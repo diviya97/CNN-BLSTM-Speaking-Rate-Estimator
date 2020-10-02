@@ -31,7 +31,7 @@ from keras.models import load_model
 EPOCHS_WITHOUT_VAL = 12
 EPSILON = 0.0000001
 FEATURES = 20
-PATH = '/home/sgeadmin/Diviya'
+PATH = '/Data/data_timit'
 EPOCHS = 25
 
 pooling_size = 2
@@ -41,7 +41,7 @@ filter_length = 5
 #Converting sylNucleiLocs to Speaking Rate
 #Speaking Rate(Y_labels) = (No.of Syllable Nuclei)/(No. of Points in Ftr1)
 def speaking_Rate(Y):
-    num_in_fold = len(Y[0])
+    num_in_fold = len(Y[0])'
     Y_labels = np.zeros((5,num_in_fold), dtype='float64')
 
     for i in range(5):
@@ -166,6 +166,7 @@ def load_data():
 # Model
 def build_model(num_filters, filter_length, pooling_size=2):
     model = Sequential()
+
     model.add(Conv1D(filters=num_filters,
                      kernel_size=filter_length,
                      strides=1,
@@ -173,10 +174,13 @@ def build_model(num_filters, filter_length, pooling_size=2):
     model.add(BatchNormalization())
     model.add(Activation('relu'))
     model.add(MaxPooling1D(pool_size=pooling_size)),
-    model.add(Dropout(0.50))
-    model.add(Bidirectional(LSTM(64, return_sequences=True, dropout=0.5)))
-    model.add(Bidirectional(LSTM(64, return_sequences=False, dropout=0.5)))
+    model.add(Dropout(0.20))
+
+    model.add(Bidirectional(LSTM(64, return_sequences=True, dropout=0.2)))
+    model.add(Bidirectional(LSTM(64, return_sequences=False, dropout=0.2)))
+
     model.add(Dense(1))
+
     model.compile(loss='mse', optimizer='adam', metrics=['mse'])
     model.summary()
 
@@ -200,7 +204,7 @@ Y_test = []
 VAL_loss = []
 
 
-for fold in range(1):
+for fold in range(5):
 
     print('fold : '+str(fold+1))
     val_index = (fold+1)%5
@@ -213,11 +217,10 @@ for fold in range(1):
     #Normalizing Y
     y_train, y_val, y_test, mu_tr, sigma_tr = normalize_Y(y_train, y_val, y_test)
 
-    fName = '/home/sgeadmin/Diviya/timit_new_SavedModels/Ftr2_pch_interp/Ftr2_pch_in_sampleBySample_with_val__fold_'+ str(fold+1)
-    #model = load_model(fName+'_.h5')
+    fName = '/SavedModels/timit/train_timit_fold_' + str(fold+1)
     #building model
     model = build_model(num_filters, filter_length, pooling_size=2)
-   
+    
     print('Train on '+str(num_train)+' samples ')
     val_loss=[]
     flag=False
@@ -249,7 +252,8 @@ for fold in range(1):
             for k in indx:
                 #print('Testing on val : '+str(k+1))
                 val_pred[k] = model.predict(np.resize(x_val[k],(1, x_val[k].shape[0], FEATURES)))
-            val_loss = np.append(val_loss, mean_squared_error(val_pred, y_val))
+            cur_loss = (mean_squared_error(val_pred, y_val))
+            val_loss = np.append(val_loss, cur_loss)
             print('val loss :' +str(val_loss))
             print('val_loss len :'+str(len(val_loss)))
             if len(val_loss)>2:
@@ -327,20 +331,14 @@ train_pearson_coeff_avg = np.sum(train_pearson_coeff)/5
 print('Train Pearson Coefficient Avg: '+str(train_pearson_coeff_avg))
 
 
-fName_mat = PATH+'/timit_Predictions/Ftr2_pch_interp/timit_Ftr2_pch_interp_SampleBySample_with_val'
-scipy.io.savemat(fName_mat+'_Ytest_pred', {'Ytest_pred': Y_test}, oned_as='row')
-scipy.io.savemat(fName_mat+'_test_coeff', mdict={'test_coeff': test_pearson_coeff}, oned_as='row')
-scipy.io.savemat(fName_mat+'_Yval_pred', {'Yval_pred': Y_val}, oned_as='row')
-scipy.io.savemat(fName_mat+'_val_coeff', mdict={'val_coeff': val_pearson_coeff}, oned_as='row')
-scipy.io.savemat(fName_mat+'_Ytrain_pred', {'Ytrain_pred': Y_train}, oned_as='row')
-scipy.io.savemat(fName_mat+'_train_coeff', mdict={'train_coeff': train_pearson_coeff}, oned_as='row')
-scipy.io.savemat(fName_mat+'_Val_loss', {'Val_loss': VAL_loss}, oned_as='row')
-
-
-
-# In[ ]:
-
-
+#fName_mat = '/Predictions/timit_predictions/train_timit'
+#scipy.io.savemat(fName_mat+'_Ytest_pred', {'Ytest_pred': Y_test}, oned_as='row')
+#scipy.io.savemat(fName_mat+'_test_coeff', mdict={'test_coeff': test_pearson_coeff}, oned_as='row')
+#scipy.io.savemat(fName_mat+'_Yval_pred', {'Yval_pred': Y_val}, oned_as='row')
+#scipy.io.savemat(fName_mat+'_val_coeff', mdict={'val_coeff': val_pearson_coeff}, oned_as='row')
+#scipy.io.savemat(fName_mat+'_Ytrain_pred', {'Ytrain_pred': Y_train}, oned_as='row')
+#scipy.io.savemat(fName_mat+'_train_coeff', mdict={'train_coeff': train_pearson_coeff}, oned_as='row')
+#scipy.io.savemat(fName_mat+'_Val_loss', {'Val_loss': VAL_loss}, oned_as='row')
 
 
 
