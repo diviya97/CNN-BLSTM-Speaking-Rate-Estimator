@@ -14,8 +14,9 @@ The input to the CNN-BLSTM model are 19 sub-band energies and pitch values. The 
 
 #### 1. Data
 
-To run the files full data data can be downloaded from -' https://drive.google.com/drive/folders/1rnARyftKDB6VkhOkVGEHJlqVHq28Db-c?usp=sharing'
-The downloaded folders should be moved to following locations - 
+To run the files full data data can be downloaded from -' https://drive.google.com/drive/folders/1rnARyftKDB6VkhOkVGEHJlqVHq28Db-c?usp=sharing'.
+
+The downloaded folders should be moved to following locations : 
 1. The 'data_TI' folder should be moved to '/Data/data_timit/' and renamed as 'data'
 2. The 'data_SW' folder should be moved to '/Data/data_swbd/' and renamed as 'data'
 
