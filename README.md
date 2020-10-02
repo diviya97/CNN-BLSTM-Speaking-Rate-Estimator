@@ -40,19 +40,19 @@ pyhton3 test.py
 ```
 
 ## Contributors
-######Aparna Srinivasan
+1. Aparna Srinivasan
 
 Department of Electrical and Computer Engineering, University of California San Diego, CA, USA, 92093
 
 E-mail: a2sriniv@ucsd.edu
 
-######Diviya Singh
+2. Diviya Singh
 
 Department of Electrical Engineering, Indian Institute of Technology (IIT), Roorkee, India, 247667
 
 E-mail: diviya7297@gmail.com
 
-#####Aravind Illa
+3. Aravind Illa
 
 Department of Electrical Engineering, Indian Institute of Science (IISc), Bangalore, India, 560012
 
