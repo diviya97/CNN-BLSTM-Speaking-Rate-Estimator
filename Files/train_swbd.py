@@ -31,7 +31,7 @@ from sklearn.metrics import mean_squared_error
 EPOCHS_WITHOUT_VAL= 12
 EPSILON = 0.0000001
 FEATURES = 20
-PATH = '/home/sgeadmin/Diviya'
+PATH = '/Data/data_swbd'
 EPOCHS = 25
 
 pooling_size = 2
@@ -132,7 +132,7 @@ def load_data():
     Y_Total = []
 
     # Loading Data
-    parent = PATH+'/data_swbd'
+    parent = PATH+'/data'
     suffix = '.mat'
 
     for i in range(5):
@@ -143,6 +143,7 @@ def load_data():
             filename = file_names[index][0][0]
             path = os.path.join(parent, filename+suffix)
             data = scipy.io.loadmat(path)
+	    # 'Ftr2' id 19Sbes
             a = data['Ftr2']
             b = np.squeeze(data['pch_interp'])
             #appending 'pch_interp' to 'Ftr2'
@@ -215,7 +216,7 @@ for fold in range(5):
     #Normalizing Y
     y_train, y_val, y_test, mu_tr, sigma_tr = normalize_Y(y_train, y_val, y_test)
 
-    fName = '/home/sgeadmin/Diviya/swbd_SavedModels/Ftr2_pch_interp/swbd_with_timit_model_Ftr2_pch_interp_SampleBySample_with_val__fold_' + str(fold+1)
+    fName = '/SavedModels/swbd/Ftr2_pch_interp/train_swbd_fold_' + str(fold+1)
     #building model
     model = build_model(num_filters, filter_length, pooling_size=2)
     
@@ -329,14 +330,14 @@ train_pearson_coeff_avg = np.sum(train_pearson_coeff)/5
 print('Train Pearson Coefficient Avg: '+str(train_pearson_coeff_avg))
 
 
-fName_mat = PATH+'/swbd_Predictions/Ftr2_pch_interp/swbd_with_timit_model_Ftr2_pch_interp_SampleBySample_with_val'
-scipy.io.savemat(fName_mat+'_Ytest_pred', {'Ytest_pred': Y_test}, oned_as='row')
-scipy.io.savemat(fName_mat+'_test_coeff', mdict={'test_coeff': test_pearson_coeff}, oned_as='row')
-scipy.io.savemat(fName_mat+'_Yval_pred', {'Yval_pred': Y_val}, oned_as='row')
-scipy.io.savemat(fName_mat+'_val_coeff', mdict={'val_coeff': val_pearson_coeff}, oned_as='row')
-scipy.io.savemat(fName_mat+'_Ytrain_pred', {'Ytrain_pred': Y_train}, oned_as='row')
-scipy.io.savemat(fName_mat+'_train_coeff', mdict={'train_coeff': train_pearson_coeff}, oned_as='row')
-scipy.io.savemat(fName_mat+'_Val_loss', {'Val_loss': VAL_loss}, oned_as='row')
+#fName_mat = '/Predictions/swbd_predictions/train_swbd'
+#scipy.io.savemat(fName_mat+'_Ytest_pred', {'Ytest_pred': Y_test}, oned_as='row')
+#scipy.io.savemat(fName_mat+'_test_coeff', mdict={'test_coeff': test_pearson_coeff}, oned_as='row')
+#scipy.io.savemat(fName_mat+'_Yval_pred', {'Yval_pred': Y_val}, oned_as='row')
+#scipy.io.savemat(fName_mat+'_val_coeff', mdict={'val_coeff': val_pearson_coeff}, oned_as='row')
+#scipy.io.savemat(fName_mat+'_Ytrain_pred', {'Ytrain_pred': Y_train}, oned_as='row')
+#scipy.io.savemat(fName_mat+'_train_coeff', mdict={'train_coeff': train_pearson_coeff}, oned_as='row')
+#scipy.io.savemat(fName_mat+'_Val_loss', {'Val_loss': VAL_loss}, oned_as='row')
 
 
 

@@ -37,7 +37,7 @@ swbd_sigma = [1.471280, 1.434821, 1.431199, 1.470063, 1.484794]
 timit_swbd_mu = [4.7766869860637255, 4.775252952230831, 4.785558354333942, 4.784423139151849, 4.787753645100162] 
 timit_swbd_sigma = [1.2143831573688817, 1.1877997366214124, 1.1836024232480609, 1.2088076079970034, 1.2195228607776702]
 
-PATH = '/home2/data/Diviya94'
+PATH = '/Data/data_timit'
 
 EPSILON = 0.0000001
 FEATURES = 20
@@ -111,7 +111,7 @@ def load_test_data():
     Y_Total = []
 
     # Loading Data
-    parent = '/home2/data/Aparna2/data'
+    parent = PATH+'/data'
     suffix = '.mat'
 
     for i in range(5):
@@ -151,7 +151,7 @@ for fold in range(5):
     print('fold : '+str(fold+1))
     val_index = (fold+1)%5
     
-    fName = '/home2/data/Aparna2/finalModels/main/timit_SavedModels/Ftr2_pch_interp/Ftr2_pch_in_sampleBySample_with_val__fold_'+ str(fold+1)
+    fName = '/SavedModels/timit/train_timit_fold_'+ str(fold+1)
     model = load_model(fName+'_.h5')
     
     #Predicting values for test data

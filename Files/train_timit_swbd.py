@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.io
 import os
-os.environ["CUDA_VISIBLE_DEVICES"]="1"
+os.environ["CUDA_VISIBLE_DEVICES"]="-1"
 from keras.layers import multiply
 from keras.layers.core import *
 from keras.layers.recurrent import LSTM
@@ -32,7 +32,7 @@ from sklearn.metrics import mean_squared_error
 EPOCHS_WITHOUT_VAL= 12
 EPSILON = 0.0000001
 FEATURES = 20
-PATH = '/home2/data/Diviya94/timit_swbd'
+PATH = '/Data'
 EPOCHS = 25
 
 pooling_size = 2
@@ -137,7 +137,7 @@ def load_data_timit():
     print('Loading Timit Data.....')
 
     # Loading indices of files from TIMITFolds.mat in folds_ind
-    LOC = PATH
+    LOC = PATH+'/data_timit'
     file_to_open = '/TIMITFolds.mat'
     folds_file = scipy.io.loadmat(LOC + file_to_open)
     folds = folds_file['foldInds']
@@ -157,7 +157,7 @@ def load_data_timit():
     Y_Total = []
 
     # Loading Data
-    parent = PATH+'/data'
+    parent = PATH+'/data_timit/data'
     suffix = '.mat'
 
     for i in range(5):
@@ -190,7 +190,7 @@ def  load_data_swbd():
     print('Loading SWBD Data.....')
 
     # Loading indices of files from SwitchboardFolds.mat in folds_ind
-    LOC = PATH
+    LOC = PATH + '/data_swbd'
     file_to_open = '/SwitchboardFolds.mat'
     folds_file = scipy.io.loadmat(LOC + file_to_open)
     folds = folds_file['foldInds']
@@ -210,7 +210,7 @@ def  load_data_swbd():
     Y_Total = []
 
     # Loading Data
-    parent = PATH+'/data_swbd'
+    parent = PATH+'/data_swbd/data'
     suffix = '.mat'
 
     for i in range(5):
@@ -238,7 +238,7 @@ def  load_data_swbd():
     return X_Total, Y_Total
 
 
- # Model
+# Model
 def build_model(num_filters, filter_length, pooling_size=2):
     model = Sequential()
 
@@ -249,12 +249,11 @@ def build_model(num_filters, filter_length, pooling_size=2):
     model.add(BatchNormalization())
     model.add(Activation('relu'))
     model.add(MaxPooling1D(pool_size=pooling_size)),
-    model.add(Dropout(0.50))
+    model.add(Dropout(0.20))
 
-    model.add(Bidirectional(keras.layers.CuDNNLSTM(64, return_sequences=True)))
-    model.add(Dropout(0.50))
-    model.add(Bidirectional(keras.layers.CuDNNLSTM(64, return_sequences=False)))
-    model.add(Dropout(0.50))
+    model.add(Bidirectional(LSTM(64, return_sequences=True, dropout=0.2)))
+    model.add(Bidirectional(LSTM(64, return_sequences=False, dropout=0.2)))
+
     model.add(Dense(1))
 
     model.compile(loss='mse', optimizer='adam', metrics=['mse'])
@@ -294,7 +293,7 @@ for fold in range(5):
     #Normalizing Y
     y_train, y_val, y_test, mu_tr, sigma_tr = normalize_Y(y_train, y_val, y_test)
     
-    fName = PATH+'/timit_swbd_SavedModels/Ftr2_pch_interp/Ftr2_pch_interp_train_using_timit_and_swbd_data__fold_' + str(fold+1)
+    fName = '/SavedModels/timit_swbd/train_timit_swbd_fold_' + str(fold+1)
     #building model
     model = build_model(num_filters, filter_length, pooling_size=2)
     
@@ -408,7 +407,7 @@ train_pearson_coeff_avg = np.sum(train_pearson_coeff)/5
 print('Train Pearson Coefficient Avg: '+str(train_pearson_coeff_avg))
 
 
-fName_mat = PATH+'/timit_swbd_Predictions/Ftr2_pch_interp/Ftr2_pch_interp_train_using_timit_and_swbd_data'
+#fName_mat = '/Predictions/timit_swbd_predictions/train_timit_swbd'
 scipy.io.savemat(fName_mat+'_Ytest_pred', {'Ytest_pred': Y_test}, oned_as='row')
 scipy.io.savemat(fName_mat+'_test_coeff', mdict={'test_coeff': test_pearson_coeff}, oned_as='row')
 scipy.io.savemat(fName_mat+'_Yval_pred', {'Yval_pred': Y_val}, oned_as='row')
