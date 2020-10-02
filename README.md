@@ -13,7 +13,11 @@ The input to the CNN-BLSTM model are 19 sub-band energies and pitch values. The 
 ### Folders 
 
 #### 1. Data
-This folder contains sample data.
+
+To run the files full data data can be downloaded from -' https://drive.google.com/drive/folders/1rnARyftKDB6VkhOkVGEHJlqVHq28Db-c?usp=sharing'
+The downloaded folders should be moved to following locations - 
+1. The 'data_TI' folder should be moved to '/Data/data_timit/' and renamed as 'data'
+2. The 'data_SW' folder should be moved to '/Data/data_swbd/' and renamed as 'data'
 
 #### 2. Files
 This folder contains 3 files used for training the CNN-BLSTM model on the TIMIT and SWITCHBOARD dataset.
