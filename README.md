@@ -40,7 +40,7 @@ This folder contains the CNN-BLSTM models and their weights trained on the datas
 
 ```python
 
-pyhton3 test.py
+python3 test.py
 
 ```
 
